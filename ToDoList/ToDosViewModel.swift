@@ -14,6 +14,20 @@ class ToDosViewModel: ObservableObject {
         loadData()
     }
     
+    func toggleCompleted(toDo: ToDo) {
+        // Don't try to update if toDos.id == nil, which it never should be. But in case another developer tries to call this is the wrong place, we're covered...
+        guard toDo.id != nil else { return }
+        
+        // copy toDo (a constant) into a newToDo (var) so we can update the isCompleted property
+        var newToDo = toDo
+        newToDo.isCompleted.toggle() // flips false to true and true to false
+        // Find the ID for newToDo in the array of toDos, then update the element at that index with the data in newToDo
+        if let index = toDos.firstIndex(where: {$0.id == newToDo.id}) {
+            toDos[index] = newToDo
+        }
+        saveData()
+    }
+    
     func saveToDo(toDo: ToDo) {
         // if new, append to toDosVM.todos else update the toDo that was passed in from the List
         if toDo.id == nil {
@@ -60,7 +74,7 @@ class ToDosViewModel: ObservableObject {
     
     func purgeData() {
         let path = URL.documentsDirectory.appending(component: "toDos")
-        let data = try? JSONEncoder().encode("") 
+        let data = try? JSONEncoder().encode("")
         do {
             try data?.write(to: path, options: .completeFileProtection)
         } catch {
