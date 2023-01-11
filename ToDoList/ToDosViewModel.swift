@@ -47,14 +47,24 @@ class ToDosViewModel: ObservableObject {
             print("😡 ERROR: Could not load data \(error.localizedDescription)")
         }
     }
-        
-        func saveData() {
-            let path = URL.documentsDirectory.appending(component: "toDos")
-            let data = try? JSONEncoder().encode(toDos) // try? means if error is thrown, data = nil
-            do {
-                try data?.write(to: path, options: .completeFileProtection)
-            } catch {
-                print("😡 ERROR: Could not save data \(error.localizedDescription)")
-            }
+    
+    func saveData() {
+        let path = URL.documentsDirectory.appending(component: "toDos")
+        let data = try? JSONEncoder().encode(toDos) // try? means if error is thrown, data = nil
+        do {
+            try data?.write(to: path, options: .completeFileProtection)
+        } catch {
+            print("😡 ERROR: Could not save data \(error.localizedDescription)")
         }
     }
+    
+    func purgeData() {
+        let path = URL.documentsDirectory.appending(component: "toDos")
+        let data = try? JSONEncoder().encode("") 
+        do {
+            try data?.write(to: path, options: .completeFileProtection)
+        } catch {
+            print("😡 ERROR: Could not save data \(error.localizedDescription)")
+        }
+    }
+}
